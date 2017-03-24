@@ -71,12 +71,13 @@ namespace Sitecore.Support.Publishing.Service.Events
                 }
                 else
                 {
-                    list.Add(publisher.Options);
-                    //foreach (string langName in publishingJobEndEventArgs.EventData.LanguageNames)
-                    //{
-                    //   Sitecore.Publishing.PublishOptions opt = new Sitecore.Publishing.PublishOptions (publisher.Options.SourceDatabase, publisher.Options.TargetDatabase, publisher.Options.Mode, LanguageManager.GetLanguage(langName), publisher.Options.PublishDate);
-                    //    list.Add(opt);
-                    //}
+                    foreach (string lang in eventData.LanguageNames)
+                    {
+                        Sitecore.Publishing.PublishOptions opt = publisher.Options.Clone();
+                        opt.Language = LanguageManager.GetLanguage(lang);
+                        list.Add(opt);
+                    }
+
                     this._logger.Info("Raising : 'publish:end' for '" + publishingJobTargetMetadata.TargetName + "'", null);
                     this._eventing.RaiseEvent("publish:end", new object[]
                     {
